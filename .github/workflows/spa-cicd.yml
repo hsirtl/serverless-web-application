@@ -53,7 +53,7 @@ env:
   CDN_ENDPOINT_NAME: ${{ github.event.inputs.CDN_ENDPOINT_NAME }}
   APP_SOURCE_PATH: 'src'
   ANGULAR_PATH: 'client/angular/ToDoSpa'
-  NODE_VERSION: '14'
+  NODE_VERSION: '18'
   BICEP_FILE_PATH: 'deploy'
 
 jobs:
