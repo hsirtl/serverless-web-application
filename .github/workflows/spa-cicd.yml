@@ -54,7 +54,7 @@ env:
   APP_SOURCE_PATH: 'src'
   ANGULAR_PATH: 'client/angular/ToDoSpa'
   ANGULAR_VERSION: '10.0.x'
-  NODE_VERSION: '18'
+  NODE_VERSION: '16'
   BICEP_FILE_PATH: 'deploy'
 
 jobs:
@@ -112,7 +112,6 @@ jobs:
         pushd ./${{ env.APP_SOURCE_PATH }}/${{ env.ANGULAR_PATH }}
         npm install --legacy-peer-deps
         npm install -g @angular/cli
-        npm audit fix --force
         ng build -c=production --output-path=./dist
         popd
     
