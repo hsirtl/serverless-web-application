@@ -61,6 +61,11 @@ jobs:
   function_cicd:
     runs-on: ubuntu-latest
     steps:
+
+    # Checkout
+    - name: Checkout
+      uses: actions/checkout@v1
+  
     # Authentication
     # Set up the following secrets in your repository: AZURE_CREDENTIALS
     # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
@@ -69,10 +74,6 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS  }}
     
-    # Checkout
-    - name: Checkout
-      uses: actions/checkout@v1
-  
     # Setup .NET Core environment
     - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
       uses: actions/setup-dotnet@v1
@@ -95,26 +96,16 @@ jobs:
         app-name: ${{ env.FUNCTION_NAME }}
         package: ./${{ env.APP_SOURCE_PATH }}/${{ env.FUNCTIONAPP_PATH }}/outputs
 
-    # Validate and Build ARM Template from Bicep
-    - name: Azure CLI - Validate Bicep file ${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.bicep
-      uses: Azure/cli@1.0.4
-      with:
-        # Azure CLI version to be used to execute the script. If not provided, latest version is used
-        azcliversion: 2.27.2
-        # Specify the script here
-        inlineScript: |
-          az deployment group validate -g ${{ env.RESOURCE_GROUP_NAME }} --template-file ./${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.bicep
-          az bicep upgrade
-          az bicep build --file ./${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.bicep
-
     # Deployment Bicep template for APIM API 
     - name: Import ${{ env.ENVIRONMENT_TYPE }} environment API to ${{ env.APIM_NAME }}
       id: apiDeployment
       uses: azure/arm-deploy@v1
       with:
+        scope: 'resourcegroup'
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         deploymentName: '${{ github.run_number }}-api'
         resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
-        template: ./${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.json  # Set this to the location of your template file
+        template: ./${{ env.BICEP_FILE_PATH }}/${{ env.BICEP_FILE_NAME }}.bicep
         parameters: apimName=${{ env.APIM_NAME }} openApiUrl=${{ env.API_DOCUMENT_URL }} originUrl=${{ env.ORIGIN_URL }} apimApiName=${{ env.API_NAME }}
 
     # Azure logout
