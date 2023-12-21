@@ -110,8 +110,8 @@ jobs:
     - name: Build Angular application
       run: |
         pushd ./${{ env.APP_SOURCE_PATH }}/${{ env.ANGULAR_PATH }}
-        npm install
-        npm install -g @angular/cli@${{ env.ANGULAR_VERSION }}
+        npm install --legacy-peer-deps
+        npm install -g @angular/cli
         ng build -c=production --output-path=./dist --force
         popd
     
