@@ -65,7 +65,7 @@ jobs:
       id: infraDeployment
       uses: azure/arm-deploy@v1
       with:
-        scope: ${{ env.RESOURCE_GROUP_NAME }}
+        scope: 'resourcegroup'
         deploymentName: ${{ github.run_number }}
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ env.RESOURCE_GROUP_NAME }}
