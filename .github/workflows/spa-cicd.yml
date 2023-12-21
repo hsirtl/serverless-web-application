@@ -112,6 +112,7 @@ jobs:
         pushd ./${{ env.APP_SOURCE_PATH }}/${{ env.ANGULAR_PATH }}
         npm install --legacy-peer-deps
         npm install -g @angular/cli
+        npm audit fix --force
         ng build -c=production --output-path=./dist
         popd
     
